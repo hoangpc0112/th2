@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Card,
@@ -8,10 +8,9 @@ import {
   ListItem,
   ListItemText,
   Divider,
-  Paper,
 } from "@mui/material";
 import { useParams, Link } from "react-router-dom";
-import models from "../../modelData/models";
+import fetchModel from "../../lib/fetchModelData";
 
 import "./styles.css";
 
@@ -20,8 +19,15 @@ import "./styles.css";
  */
 function UserPhotos() {
   const { userId } = useParams();
-  const photos = models.photoOfUserModel(userId);
+  const [photos, setPhotos] = useState([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchModel("/photosOfUser/" + userId);
+      setPhotos(data);
+    };
+    fetchData();
+  }, [userId]);
   return (
     <div>
       {photos.map((photo) => (

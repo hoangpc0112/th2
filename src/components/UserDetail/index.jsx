@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Paper, Button } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import models from "../../modelData/models";
+import fetchModel from "../../lib/fetchModelData";
 
 import "./styles.css";
 
@@ -10,7 +10,15 @@ import "./styles.css";
  */
 function UserDetail() {
   const { userId } = useParams();
-  const user = models.userModel(userId);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchModel("/user/" + userId);
+      setUser(data);
+    };
+    fetchData();
+  }, [userId]);
 
   if (!user) {
     return <Typography>User not found!</Typography>;
